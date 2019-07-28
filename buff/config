@@ -1,0 +1,12 @@
+﻿# 查询间隔s
+interval_time = 2
+
+# 查询时间min(0为一直查询)
+all_time = 0
+
+# 连接的wifi名(以备断网重连)
+wifi_1name = 凤翔山庄13栋401
+wifi_name = Honor10
+
+# 登陆之后是否需要开启浏览器(T/F)
+open_web = F

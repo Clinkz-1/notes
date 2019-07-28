@@ -1,0 +1,16 @@
+# 需求商品的网址和小于的价格(注意两者之间的空格和小于号)
+https://buff.163.com/market/goods?goods_id=3556&from=market#tab=selling&tag_ids=1410  <8
+https://buff.163.com/market/goods?goods_id=23444&from=market#tab=selling&tag_ids=7992  <4.9
+https://buff.163.com/market/goods?goods_id=3521&from=market#tab=selling&tag_ids=12994  <4
+https://buff.163.com/market/goods?goods_id=24157&from=market#tab=selling&tag_ids=1534  <16
+https://buff.163.com/market/goods?goods_id=12020&from=market#tab=selling&tag_ids=2223  <15.5
+https://buff.163.com/market/goods?goods_id=6452&from=market#tab=selling&tag_ids=18217  <9.5
+https://buff.163.com/market/goods?goods_id=24157&from=market#tab=selling&tag_ids=6877  <20
+https://buff.163.com/market/goods?goods_id=27020&from=market#tab=selling&tag_ids=19232  <45
+
+https://buff.163.com/market/goods?goods_id=12163&from=market#tab=selling&tag_ids=3693  <30
+https://buff.163.com/market/goods?goods_id=12163&from=market#tab=selling&tag_ids=503  <28
+https://buff.163.com/market/goods?goods_id=12163&from=market#tab=selling&tag_ids=504  <30
+https://buff.163.com/market/goods?goods_id=12163&from=market#tab=selling&tag_ids=800  <30
+https://buff.163.com/market/goods?goods_id=3590&from=market#tab=selling&tag_ids=22351  <145
+https://buff.163.com/market/goods?goods_id=6473&from=market#tab=selling&tag_ids=23151  <145
