@@ -5,8 +5,7 @@ interval_time = 2
 all_time = 0
 
 # 连接的wifi名(以备断网重连)
-wifi_1name = 凤翔山庄13栋401
-wifi_name = Honor10
+wifi_name = 凤翔山庄13栋401
 
 # 登陆之后是否需要开启浏览器(T/F)
 open_web = F
