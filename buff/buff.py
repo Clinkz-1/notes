@@ -5,9 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class Buff:
-    def __init__(self,tel,password):
-        self.tel = tel
-        self.password = password
+    def __init__(self):
         self.driver = webdriver.Chrome()
         self.index_url ='https://buff.163.com/market/?game=dota2#tab=selling&page_num=1'
         self.get_config_and_data()
@@ -51,6 +49,8 @@ class Buff:
             all_time = re.findall(r'all_time\s*=\s*(\d+)\s*',line)
             wifi_name = re.findall(r'wifi_name\s*=(.+)', line)
             open_web = re.findall(r'open_web\s*=\s*(\w)', line)
+            tel = re.findall(r'tel\s*=\s*(\w)', line)
+            password = re.findall(r'password\s*=\s*(\w)', line)
             if interval_time:
                 self.interval_time = float(interval_time[0])
             elif all_time:
@@ -59,6 +59,10 @@ class Buff:
                 self.wifi_name = wifi_name[0].strip()
             elif open_web:
                 self.open_web = open_web[0].upper()
+            elif tel:
+                self.tel = tel[0].strip()
+            elif password:
+                self.password = password[0].strip()
 
         with open('./goods_price.txt','r',encoding='utf8')as f:
             lines = f.readlines()
@@ -136,8 +140,7 @@ class Buff:
             self.close()
 
 if __name__ == '__main__':
-    b = Buff('17714552601','caowo1996')
+    b = Buff()
     b.run()
-    
 
 
