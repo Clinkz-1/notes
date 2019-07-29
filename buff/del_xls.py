@@ -22,7 +22,7 @@ class XlWriter:  # 写入xlsx
         """切换表"""
         if title not in self.wb.sheetnames:
             print(f'当前表格不含{title}页')
-            return False
+            return None
         self.ws = self.wb[title]
 
     def save(self):
@@ -41,6 +41,13 @@ class XlWriter:  # 写入xlsx
         ws.append(row)
         self.ws = self.wb[title]
 
+    def edit_cell(self, adderss, value):
+        """修改单个单元格里内容
+        :param adderss: excel里的坐标
+        :param value: 修改的值
+        """
+        self.ws[adderss].value = value
+
     def set_border(self, ws):
         """设置表格格式"""
         for row in ws.rows:
@@ -54,7 +61,7 @@ class XlReader:  # 读取xlsx
     def __init__(self, file):
         self.wb = load_workbook(file)
 
-    def read(self, title,skip=[2]):
+    def read(self, title, skip=[2]):
         """
         :param title: 表名
         :param skip: 范围列表，前两个值为查询excel的行号范围，默认全部
@@ -67,8 +74,8 @@ class XlReader:  # 读取xlsx
         ws = self.wb[title]
         rules = []
         headers = None
-        if len(skip)==1:skip.append(len(list(ws.values)))
-        if skip[0]<2:skip[0]=2
+        if len(skip) == 1: skip.append(len(list(ws.values)))
+        if skip[0] < 2: skip[0] = 2
         for i, row in enumerate(ws.values):
             if i == 0:
                 headers = row
@@ -92,8 +99,8 @@ class XlReader:  # 读取xlsx
             return False
         ws = self.wb[title]
         rules = []
-        if len(skip)==1:skip.append(len(list(ws.values)))
-        if skip[0]<2:skip[0]=2
+        if len(skip) == 1: skip.append(len(list(ws.values)))
+        if skip[0] < 2: skip[0] = 2
         for i, row in enumerate(ws.values):
             if i == 0:
                 headers = row
@@ -101,7 +108,7 @@ class XlReader:  # 读取xlsx
                 if header not in headers:
                     print(f'当前表格不含{header}属性列')
                     return None
-            elif skip[0]-1<=i<=skip[1]-1:
+            elif skip[0] - 1 <= i <= skip[1] - 1:
                 rule = {}
                 rule[header] = row[v]
                 rules.append(rule)
@@ -129,9 +136,10 @@ if __name__ == '__main__':
     nb.append_row(['A2', 'B2'])
     nb.select_sheet('title1')
     nb.append_row(['A3', 'B3'])
+    nb.edit_cell('B2','B200')
     nb.save()
 
     reader = XlReader(file_path)
-    print(reader.read('title1',[3,4]))
+    print(reader.read('title1', [2, 4]))
     print(reader.read_by_header('title1', 'h1'))
     # print(reader.read_cell('title1', 'A1'))
