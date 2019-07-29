@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from deal_xls import *
+
 class Buff:
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -49,8 +51,8 @@ class Buff:
             all_time = re.findall(r'all_time\s*=\s*(\d+)\s*',line)
             wifi_name = re.findall(r'wifi_name\s*=(.+)', line)
             open_web = re.findall(r'open_web\s*=\s*(\w)', line)
-            tel = re.findall(r'tel\s*=\s*(\w)', line)
-            password = re.findall(r'password\s*=\s*(\w)', line)
+            tel = re.findall(r'tel\s*=\s*(\d+)', line)
+            password = re.findall(r'password\s*=\s*(.+)', line)
             if interval_time:
                 self.interval_time = float(interval_time[0])
             elif all_time:
@@ -64,15 +66,12 @@ class Buff:
             elif password:
                 self.password = password[0].strip()
 
-        with open('./goods_price.txt','r',encoding='utf8')as f:
-            lines = f.readlines()
+        g = XlReader('./goods.xlsx')
         self.goods_url = []
         self.my_price = []
-        for line in lines:
-            match = re.search(r'(?P<goods>https.+\b)\s* <\s*(?P<price>\d+\.\d+|\d+)',line)
-            if match:
-                self.goods_url.append(match['goods'])
-                self.my_price.append(float(match['price']))
+        for goods in  g.read('goods'):
+            self.my_price.append(float(goods['Price']))
+            self.goods_url.append(goods['URL'])
 
     def find_goods(self):
         for i in range(len(self.goods_url)):

@@ -27,8 +27,8 @@ class XlWriter:  # 写入xlsx
 
     def save(self):
         """保存文件"""
-        for ws in self.wb.worksheets:
-            self.set_border(ws)
+        # for ws in self.wb.worksheets:
+        #     self.set_border(ws)
         self.wb.save(self.save_name)
         print(f'save to {self.save_name}')
 
@@ -128,18 +128,25 @@ class XlReader:  # 读取xlsx
 
 
 if __name__ == '__main__':
-    file_path = './nb.xlsx'
-    nb = XlWriter(file_path, 'title1')
-    nb.append_row(['h1', 'h2'])
-    nb.append_row(['A2', 'B2'])
-    nb.new_sheet('title2', ['A1', 'B1'])
-    nb.append_row(['A2', 'B2'])
-    nb.select_sheet('title1')
-    nb.append_row(['A3', 'B3'])
-    nb.edit_cell('B2','B200')
-    nb.save()
+    file_path = './goods.xlsx'
+
+    nb = XlWriter(file_path, 'goods')
+    # nb.append_row(['h1', 'h2'])
+    # nb.append_row(['A2', 'B2'])
+    # nb.new_sheet('title2', ['A1', 'B1'])
+    # nb.append_row(['A2', 'B2'])
+    # nb.select_sheet('title1')
+    # nb.append_row(['A3', 'B3'])
+    # nb.edit_cell('B2','B200')
+    # nb.save()
+
 
     reader = XlReader(file_path)
-    print(reader.read('title1', [2, 4]))
-    print(reader.read_by_header('title1', 'h1'))
+    # print(reader.read('goods', [2, 4]))
+    # for i in reader.read('goods'):
+    #     print(i['Price'])
+    #     print(type(i['Price']))
+    # print(reader.read_by_header('goods', 'URL'))
     # print(reader.read_cell('title1', 'A1'))
+    # for i in reader.read('goods'):
+    #     print(i)
