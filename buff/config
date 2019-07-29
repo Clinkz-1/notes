@@ -1,11 +1,15 @@
-﻿# 查询间隔s
+# 账号密码
+tel =
+password =
+
+# 查询间隔s
 interval_time = 2
 
 # 查询时间min(0为一直查询)
-all_time = 0
+all_time = 60
 
 # 连接的wifi名(以备断网重连)
 wifi_name = 凤翔山庄13栋401
 
-# 登陆之后是否需要开启浏览器(T/F)
+# 登陆之后是否需要继续开启浏览器(T/F)
 open_web = F
