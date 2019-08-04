@@ -1,5 +1,4 @@
 import time,re,os
-import urllib.parse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -70,39 +69,23 @@ class Buff:
         g = XlReader('./goods.xlsx')
         self.goods_url = []
         self.my_price = []
-        self.query_url = []
         for goods in  g.read('goods'):
             self.my_price.append(float(goods['Price']))
             self.goods_url.append(goods['URL'])
-            goods_id = 0
-            tag_ids = 0
-            for temp in urllib.parse.urlparse(goods['URL']):
-                goodsid = re.findall(r'goods_id=(\d+)', temp)
-                tagids = re.findall(r'tag_ids=(\d+)', temp)
-                if goodsid:goods_id = goodsid[0]
-                if tagids:tag_ids = tagids[0]
-            if goods_id and tag_ids:
-                query_url = f'https://buff.163.com/api/market/goods/sell_order?game=dota2&goods_id={goods_id}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1&tag_ids={tag_ids}'
-                self.query_url.append(query_url)
-    def find_goods(self):
-        try:
-            for i in range(len(self.goods_url)):
-                self.driver.get(self.goods_url[i])
-                self.wait().until(EC.presence_of_element_located((By.CLASS_NAME, 'list_tb_dota2')))
-                tr_list = self.driver.find_elements_by_xpath('//tbody[@class="list_tb_dota2"]/tr')
-                for tr in tr_list[1:]:
-                    price = float(tr.find_elements_by_xpath('./td[6]/strong')[0].text[1:])
-                    if price <= self.my_price[i]:
-                        tr.find_elements_by_xpath('./td[7]/a')[0].click()
-                        self.pay()
-                        print(f'spend {price} {self.goods_url[i]}')
-                        break
-                time.sleep(self.interval_time)
-        except Exception as e:
-            print(e)
-            self.reconnect()
-            self.find_goods()
 
+    def find_goods(self):
+        for i in range(len(self.goods_url)):
+            self.driver.get(self.goods_url[i])
+            self.wait().until(EC.presence_of_element_located((By.CLASS_NAME, 'list_tb_dota2')))
+            tr_list = self.driver.find_elements_by_xpath('//tbody[@class="list_tb_dota2"]/tr')
+            for tr in tr_list[1:]:
+                price = float(tr.find_elements_by_xpath('./td[6]/strong')[0].text[1:])
+                if price <= self.my_price[i]:
+                    tr.find_elements_by_xpath('./td[7]/a')[0].click()
+                    self.pay()
+                    print(f'spend {price} {self.goods_url[i]}')
+                    break
+            time.sleep(self.interval_time)
 
     def pay(self):
         '''暂时只支持支付宝'''
@@ -132,18 +115,23 @@ class Buff:
             self.driver.add_cookie(cookie)
 
     def run_recover(self):
-        if self.all_time:
-            length = int(self.all_time * 60 / self.interval_time*len(self.goods_url))-self.num
-            if length<=0:return
-            for i in range(length):
-                self.find_goods()
-                self.num += 1
-                print(f'查询了{self.num}轮')
-        else:
-            while True:
-                self.find_goods()
-                self.num += 1
-                print(f'查询了{self.num}轮')
+        try:
+            if self.all_time:
+                length = int(self.all_time * 60 / self.interval_time*len(self.goods_url))-self.num
+                if length<=0:return
+                for i in range(length):
+                    self.find_goods()
+                    self.num += 1
+                    print(f'查询了{self.num}轮')
+            else:
+                while True:
+                    self.find_goods()
+                    self.num += 1
+                    print(f'查询了{self.num}轮')
+        except Exception as e:
+            print(e)
+            self.reconnect()
+            self.run_recover()
 
     def run(self):
             self.login()

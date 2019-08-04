@@ -1,12 +1,12 @@
 # 账号密码
-tel = 
-password = 
+tel = 17714552601
+password = caowo1996
 
 # 查询间隔s
 interval_time = 2
 
 # 查询时间min(0为一直查询)
-all_time = 60
+all_time = 0
 
 # 连接的wifi名(以备断网重连)
 wifi_name = 凤翔山庄13栋401
