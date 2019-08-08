@@ -61,7 +61,7 @@ class XlReader:  # 读取xlsx
     def __init__(self, file):
         self.wb = load_workbook(file)
 
-    def read(self, title, skip=[2]):
+    def read(self, title, skip=[2],header_line=1):
         """
         :param title: 表名
         :param skip: 范围列表，前两个值为查询excel的行号范围，默认全部
@@ -75,9 +75,9 @@ class XlReader:  # 读取xlsx
         rules = []
         headers = None
         if len(skip) == 1: skip.append(len(list(ws.values)))
-        if skip[0] < 2: skip[0] = 2
+        if skip[0] < header_line+1: skip[0] = header_line+1
         for i, row in enumerate(ws.values):
-            if i == 0:
+            if i == header_line-1:
                 headers = row
                 continue
             elif skip[0] - 1 <= i <= skip[1] - 1:
@@ -87,7 +87,7 @@ class XlReader:  # 读取xlsx
                 rules.append(rule)
         return rules
 
-    def read_by_header(self, title, header, skip=[2]):
+    def read_by_header(self, title, header, skip=[2],header_line=1):
         """
         :param title: 表名
         :param skip: 范围列表，前两个值为查询excel的行号范围，默认全部
@@ -100,9 +100,9 @@ class XlReader:  # 读取xlsx
         ws = self.wb[title]
         rules = []
         if len(skip) == 1: skip.append(len(list(ws.values)))
-        if skip[0] < 2: skip[0] = 2
+        if skip[0] < header_line+1: skip[0] = header_line+1
         for i, row in enumerate(ws.values):
-            if i == 0:
+            if i == header_line-1:
                 headers = row
                 v = headers.index(header)
                 if header not in headers:
