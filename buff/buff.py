@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from deal_xls import *
+from utils.deal_xls import *
 
 class Buff:
     def __init__(self):
@@ -65,13 +65,6 @@ class Buff:
                 self.tel = tel[0].strip()
             elif password:
                 self.password = password[0].strip()
-
-        g = XlReader('./goods.xlsx')
-        self.goods_url = []
-        self.my_price = []
-        for goods in  g.read('goods'):
-            self.my_price.append(float(goods['Price']))
-            self.goods_url.append(goods['URL'])
 
     def find_goods(self):
         for i in range(len(self.goods_url)):

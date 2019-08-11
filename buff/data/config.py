@@ -1,0 +1,1 @@
+config={'tel': '17714552601', 'password': 'caowo1996', 'mysql_user': 'root', 'mysql_password': '312429', 'mysql_database_name': 'goods', 'interval_time': '10', 'all_time': '0'}
