@@ -56,7 +56,10 @@ class RedisClient:
         return self.db.zrem(name,*values)
 
     def zremall(self):
-        return self.zrem(*self.zrange(withscores=False))
+        if self.zcard():
+            return self.zrem(*self.zrange(withscores=False))
+        return
+   
 
 if __name__ == '__main__':
 
