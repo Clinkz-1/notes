@@ -1,27 +1,14 @@
 import re
-
+from data.config import config
 from deal_xls import XlReader
 from mysql_test import MysqlClient
 from redis_test import RedisClient
 from aiohttp_test import AiohttpClient
 
 
-def get_config():
-    with open('../config','r',encoding='utf8')as f:
-        lines = f.readlines()
-    config_dict = {}
-    for line in lines:
-        match = re.search(r'(?P<key>.*\b)\s*=\s*(?P<val>\b.*)',line)
-        if match:
-            config_dict[match['key'].strip()] = match['val'].strip()
-    with open('../data/config.py','w')as f:
-        f.write('config=')
-        f.write(str(config_dict))
-
 def excel2mysql():
     r = XlReader('../data/goods.xlsx')
     goods_dict = r.read('goods')
-    from data.config import config
     s = MysqlClient(config['mysql_user'],config['mysql_password'],config['mysql_database_name'])
     s.drop_table()
     s.create_table()
@@ -41,7 +28,6 @@ def excel2mysql():
 
 def mysql2redis():
     r = RedisClient(zset_name='query_url_price')
-    from data.config import config
     s = MysqlClient(config['mysql_user'], config['mysql_password'], config['mysql_database_name'])
     r.zremall()
     goods_querys = s.find(col_list=['query_url','price'])
@@ -49,6 +35,7 @@ def mysql2redis():
         r.zadd(*query_one)
     s.close()
     r.close()
+
 
 def query2redis():
     rq = RedisClient(zset_name='query_url_price')
@@ -62,11 +49,7 @@ def query2redis():
     rq.close()
     rb.close()
 
-def redis2buy():
-    pass
-
 
 if __name__ == '__main__':
-    # get_config()
-    # excel2mysql()
+    excel2mysql()
     mysql2redis()
