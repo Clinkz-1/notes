@@ -39,7 +39,7 @@ def excel2mysql():
     s.close()
 
 def mysql2redis():
-    r = RedisClient(zset_name='goods')
+    r = RedisClient(zset_name='query_url_price')
     from data.config import config
     s = MysqlClient(config['mysql_user'], config['mysql_password'], config['mysql_database_name'])
     r.zremall()
