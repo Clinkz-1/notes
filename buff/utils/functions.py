@@ -3,6 +3,7 @@ import re
 from deal_xls import XlReader
 from mysql_test import MysqlClient
 from redis_test import RedisClient
+from aiohttp_test import AiohttpClient
 
 
 def get_config():
@@ -49,6 +50,20 @@ def mysql2redis():
     s.close()
     r.close()
 
+def query2redis():
+    rq = RedisClient(zset_name='query_url_price')
+    rb = RedisClient(zset_name='buy_id_price')
+    url_price_list = rq.zrange()
+    a = AiohttpClient(url_price_list,headers,cookies)
+    buy_id_price = a.aiohttp_run()
+    if buy_id_price:
+        for item in buy_id_price:
+            rb.zadd(*item)
+    rq.close()
+    rb.close()
+
+def redis2buy():
+    pass
 
 
 if __name__ == '__main__':
