@@ -25,9 +25,13 @@ class AiohttpClient:
 
 
     async def fetch(self,url, session):  # 开启异步请求
-        async with session.get(url) as resp:
-            query_goods = await resp.json()
-            self.deal_data(url,query_goods)
+        try:
+            async with session.get(url) as resp:
+                query_goods = await resp.json()
+                self.deal_data(url,query_goods)
+        except Exception as e:
+            print(url,e)
+            pass
 
 
     def aiohttp_run(self):
