@@ -1,5 +1,6 @@
 import aiohttp
 import asyncio
+import re
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'}
 class AiohttpClient:
@@ -8,7 +9,7 @@ class AiohttpClient:
         self.cookies = cookies
         self.headers = headers
         self.pool = pool
-        self.buy_id_price = []
+        self.buy_id_goodstag_id = []
 
     async def main(self):  # 启动
         sem = asyncio.Semaphore(self.pool)
@@ -37,15 +38,20 @@ class AiohttpClient:
     def aiohttp_run(self):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.main())
-        return self.buy_id_price
+        return self.buy_id_goodstag_id
 
     def deal_data(self,url,query_goods):
         for goods in query_goods['data']['items']:
             if float(goods['price']) <= self.url_price_dict[url]:
-                self.buy_id_price.append((goods['id'],float(goods['price'])))
+                goods_id = re.findall('goods_id=(\d+)', url)
+                tag_ids = re.findall('tag_ids=(\d+)', url)
+                if tag_ids:
+                    self.buy_id_goodstag_id.append((goods['id'],float(goods_id[0]+'.'+tag_ids[0])))
+                else:
+                    self.buy_id_goodstag_id.append((goods['id'], float(goods_id[0])))
 
 
 if __name__ == '__main__':
     a = AiohttpClient(url_price_list,cookies)
-    buy_id_price = a.aiohttp_run()
+    buy_id_goodstag_id = a.aiohttp_run()
 

@@ -40,12 +40,12 @@ def mysql2redis():
 
 def query2redis():
     rq = RedisClient(zset_name='query_url_price')
-    rb = RedisClient(zset_name='buy_id_price')
+    rb = RedisClient(zset_name='buy_id_goodstag_id')
     url_price_list = rq.zrange()
     a = AiohttpClient(url_price_list,cookies=cookies)
-    buy_id_price = a.aiohttp_run()
-    if buy_id_price:
-        for item in buy_id_price:
+    buy_id_goodstag_id = a.aiohttp_run()
+    if buy_id_goodstag_id:
+        for item in buy_id_goodstag_id:
             rb.zadd(*item)
     rq.close()
     rb.close()
