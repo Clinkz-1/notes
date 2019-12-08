@@ -1,0 +1,79 @@
+import cv2
+import win32gui,win32api,win32con,time
+from PIL import ImageGrab
+
+srcpath='./bg.png'
+objpath='./src.png'
+
+def save_pic(picpath):
+    bbox=(0,0,1919,1079)
+    im=ImageGrab.grab(bbox)
+    im. save(picpath)
+
+def click(x,y,click_mode='l'):
+    win32api.SetCursorPos((x,y))
+    if click_mode[0].lower()=='l':
+        for i in range(len(click_mode)):
+            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0,0,0)
+            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+    elif click_mode[0].lower()=='r':
+        for i in range(len(click_mode)):
+            win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0)
+            win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0)
+
+def range_all_click(p1,p2,space=80,click_mode='l',click_time=0.01):
+    num = int(space / 2)
+    p1 = list(map(int,p1))
+    p2 = list(map(int,p2))
+    assert p2[0]-p1[0]>=num
+    assert p2[1]-p1[1]>=num
+    for i in range(p1[0]+num,p2[0]+1,num):
+        for j in range(p1[1]+num,p2[1]+1,num):
+            click(i,j,click_mode)
+            time.sleep(click_time)
+
+
+
+def imgfind(srcimg,objimg,method=cv2.TM_SQDIFF):
+    srcGray=cv2.imread(srcimg,cv2.IMREAD_GRAYSCALE)
+    objGray=cv2.imread(objimg,cv2.IMREAD_GRAYSCALE)
+    H,W=srcGray.shape[0:2]
+    h,w=objGray.shape[0:2]
+
+    res=cv2.matchTemplate(srcGray,objGray,method)
+    min_val,max_val,min_local,max_local=cv2.minMaxLoc(res)
+
+    x1,y1= min_local if method in [cv2.TM_SQDIFF,cv2.TM_SQDIFF_NORMED] else max_local
+
+    x2,y2=x1+w,y1+h
+    return (x1,y1,x2,y2) if min_val/max_val < 0.01 else None
+
+def click_pic(srcimg,objimg):
+     area=imgfind(srcimg,objimg)
+     x=int((area[2]-area[0])/2+area[0])
+     y=int((area[3]-area[1])/2+area[1])
+     click(x,y,'ll')
+
+time.sleep(5)
+# save_pic(srcpath)
+# click_pic(srcpath,objpath)
+
+for i in range(10):
+    time.sleep(3)
+    range_all_click((1535/3,863/8*3),(1535/3*2,863/8*5),click_mode='r')
+
+
+
+def draw(srcimg,objimg ):
+     img=cv2.imread(srcimg,cv2.IMREAD_COLOR)
+     area=imgfind(srcimg,objimg)
+     if area is not None:
+        print('find ok')
+        x1,y1,x2,y2=area
+        cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)
+        cv2.imshow('win',img)
+        k=cv2.waitKey(0)
+        cv2.destroyAllWindows()
+     else:
+        print('find fail')
+# draw(srcpath,objpath)
